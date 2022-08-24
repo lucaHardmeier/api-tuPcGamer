@@ -2,47 +2,50 @@ import express from 'express'
 import Contenedor from '../Contenedor'
 const routes = express.Router()
 
-const container = new Contenedor('../carts.json')
+const cartContainer = new Contenedor('./carts.json')
+const productsContainer = new Contenedor('./products.json')
 
 routes.post('/', async (req, res) => {
-    const cartId = await container.save()
+    const cartId = await cartContainer.save()
     if (cartId) {
         res.json(cartId)
     }
-    res.send({ error: 'no se pudo guardar el producto' })
+    else res.json({ error: 'no se pudo guardar el producto' })
 })
 
 routes.delete('/:id', async (req, res) => {
     try {
-        const deletedItem = await container.deleteById(req.params.id)
+        const newCart = await cartContainer.deleteById(req.params.id)
         res.json({
-            mensaje: deletedItem
+            msj: newCart
         })
     } catch (err) {
         res.json({
-            error: err
+            error: "Ocurrió un error al intentar borrar el carrito. Inténtelo nuevamente"
         })
     }
 })
 
 routes.get('/:id/products', async (req, res) => {
-    const carts = await container.getAll()
+    const carts = await cartContainer.getAll()
     const index = carts.findIndex((cart: { id: string }) => cart.id == req.params.id)
     if (index === -1) {
         res.send({ error: 'carrito no encontrado' })
     }
-    res.send(carts[index].products)
+    else res.send(carts[index].products)
 })
 
-routes.post('/:id/products', async (req, res) => {
-    const carts = await container.getAll()
-    const index = carts.findIndex((cart: { id: string }) => cart.id == req.params.id)
-    if (index === -1) res.send({ error: 'carrito no encontrado' })
-
+routes.post('/:id/products/:id_item', async (req, res) => {
+    const allCarts = await cartContainer.getAll()
+    const cart = allCarts.find((cart: { id: string }) => cart.id == req.params.id)
+    const products = await productsContainer.getAll()
+    const product = products.find((prod: { id: string }) => prod.id === req.params.id_item)
+    if (!cart) res.send({ error: 'carrito no encontrado' })
+    else if (!product) res.send({ error: 'producto no encontrado' })
     else {
-        carts[index].products.push(req.body)
-        await container.deleteById(req.params.id)
-        await container.save(carts[index], index)
+        cart.products.push(product)
+        await cartContainer.deleteById(cart.id)
+        await cartContainer.save(cart, cart.id)
         res.json({
             mensaje: "producto agregado correctamente"
         })
@@ -50,16 +53,16 @@ routes.post('/:id/products', async (req, res) => {
 })
 
 routes.delete('/:id/products/:id_item', async (req, res) => {
-    const carts = await container.getAll()
-    const index = carts.findIndex((cart: { id: string }) => cart.id == req.params.id)
-    if (index === -1) res.send({ error: 'carrito no encontrado' })
+    const allCarts = await cartContainer.getAll()
+    const cart = allCarts.find((cart: { id: string }) => cart.id == req.params.id)
+    if (!cart) res.send({ error: 'Carrito no encontrado' })
 
     else {
-        carts[index].products.filter(product => product.id != req.params.id_item)
-        await container.deleteById(req.params.id)
-        await container.save(carts[index], index)
+        cart.products = cart.products.filter(product => product.id != req.params.id_item)
+        await cartContainer.deleteById(cart.id)
+        await cartContainer.save(cart, cart.id)
         res.json({
-            mensaje: "producto modificado correctamente"
+            mensaje: "Producto eliminado correctamente"
         })
     }
 })

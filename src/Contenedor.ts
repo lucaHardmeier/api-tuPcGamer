@@ -34,7 +34,7 @@ class Contenedor {
 
     async save(item: Item | null = null, itemId: string | null = null) {
         const items = await this.getAll()
-        const id = itemId ? itemId : items.length === 0 ? 1 : items[items.length - 1].id + 1
+        const id = itemId !== null ? itemId : items.length === 0 ? 1 : items[items.length - 1].id + 1
         const timestamp = Date.now()
         const content = item ? item : { products: [] }
         items.push({
@@ -42,8 +42,9 @@ class Contenedor {
             id,
             timestamp
         })
+
         try {
-            await fs.writeFile(this.fileRoute, JSON.stringify(items))
+            await fs.writeFile(this.fileRoute, JSON.stringify(items.sort((a: Item, b: Item) => +a.id - +b.id)))
             return id
         } catch (err) {
             console.log('No se pudo guardar el objeto', err)
@@ -61,14 +62,14 @@ class Contenedor {
     }
 
     async deleteById(id: string) {
-        //try {
-        const productos = await this.getAll()
-        if (!productos.find(producto => producto.id == id)) throw new Error("No se encontró el producto")
-        await fs.writeFile(this.fileRoute, JSON.stringify(productos.filter(producto => producto.id != id)))
-        return "Producto borrado correctamente"
-        // } catch (err) {
-        //     return "No se ha encontrado el producto"
-        // }
+        try {
+            const productos = await this.getAll()
+            if (!productos.find(producto => producto.id == id)) throw new Error("No se encontró el producto")
+            await fs.writeFile(this.fileRoute, JSON.stringify(productos.filter(producto => producto.id != id)))
+            return "La eliminación ha sido exitosa"
+        } catch (err) {
+            return "No se ha encontrado el elemento buscado"
+        }
     }
 }
 
