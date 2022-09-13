@@ -2,6 +2,7 @@ import express from 'express'
 import products from './routes/products'
 import shoppingCart from './routes/shoppingCart'
 const app = express()
+import './config/mongodb'
 
 app.use(express.json(), express.urlencoded({ extended: true }))
 
