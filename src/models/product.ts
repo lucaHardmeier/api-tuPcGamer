@@ -13,11 +13,7 @@ export const ProductSchema = new Schema({
     thumbnail: {
         type: String,
         required: true
-    },
-    codigo: {
-        type: Number,
-        require: true
     }
-})
+}, { timestamps: true })
 
-export const products = mongoose.model('products', ProductSchema)
+export const Product = mongoose.model('products', ProductSchema)

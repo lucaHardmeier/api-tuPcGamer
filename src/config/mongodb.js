@@ -12,3 +12,4 @@ async function mongoDbConnection() {
         console.log(err)
     }
 }
+mongoDbConnection()

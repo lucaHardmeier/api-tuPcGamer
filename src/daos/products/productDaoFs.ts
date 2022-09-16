@@ -1,4 +1,4 @@
-import FirebaseContainer from "../../containers/firebaseContainer"
+import FsContainer from "../../containers/fsContainer"
 
 type Product = {
     title: string,
@@ -6,15 +6,14 @@ type Product = {
     thumbnail: string
 }
 
-class CartDaoFirebase extends FirebaseContainer {
+class ProductDaoFs extends FsContainer {
     constructor() {
-        super('products')
+        super('../db/product.json')
     }
 
     async save(product: Product) {
         try {
-            const doc = this.collection.doc()
-            const newProduct = doc.create(product)
+            const newProduct = {}
             return newProduct
         } catch (err) {
             console.log(err)
@@ -24,8 +23,7 @@ class CartDaoFirebase extends FirebaseContainer {
 
     async edit(id, product: Product) {
         try {
-            const doc = this.collection.doc(id)
-            const editedProduct = await doc.update(product)
+            const editedProduct = {}
             return editedProduct
         } catch (err) {
             console.log(err)
@@ -34,4 +32,4 @@ class CartDaoFirebase extends FirebaseContainer {
     }
 }
 
-export default CartDaoFirebase
+export default ProductDaoFs

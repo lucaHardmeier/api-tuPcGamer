@@ -1,50 +1,53 @@
-import Contenedor from "../daos/indexFs"
-
-const container = new Contenedor('./products.json')
+import { productDao } from "../daos"
 
 export const getProducts = async (req, res) => {
-    const productos = await container.getAll()
-    res.send(productos)
+    try {
+        const productos = await productDao.getAll()
+        res.send(productos)
+    } catch (err) {
+        res.send(err)
+    }
 }
 
 export const getProductById = async (req, res) => {
-    const allProducts = await container.getAll()
-    const product = allProducts.find((prod: { id: string }) => prod.id === req.params.id)
-    if (!product) res.send({ error: 'producto no encontrado' })
-    res.send(product)
+    try {
+        const product = await productDao.getById(req.params.id)
+        if (!product) res.send({ error: 'producto no encontrado' })
+        res.send(product)
+    } catch (err) {
+        res.send(err)
+    }
 }
 
 export const createProduct = async (req, res) => {
-    const productId = await container.save(req.body)
-    if (productId) {
-        res.json(req.body)
+    try {
+        const product = await productDao.save(req.body)
+        if (product) {
+            res.json(product)
+        }
+        else res.json({ error: 'no se pudo guardar el producto' })
+    } catch (err) {
+        res.send(err)
     }
-    else res.json({ error: 'no se pudo guardar el producto' })
 }
 
 export const editProduct = async (req, res) => {
-    const productos = await container.getAll()
-    const index = productos.findIndex((producto: { id: string }) => producto.id == req.params.id)
-    if (index === -1) res.send({ error: 'producto no encontrado' })
-
-    else {
-        await container.deleteById(req.params.id)
-        await container.save(req.body, req.params.id)
-        res.json({
-            mensaje: "producto modificado correctamente"
-        })
+    try {
+        const product = await productDao.edit(req.params.id, req.body)
+        if (product) {
+            res.json(product)
+        }
+        else res.json({ error: 'no se pudo guardar el producto' })
+    } catch (err) {
+        res.send(err)
     }
 }
 
 export const deleteProduct = async (req, res) => {
     try {
-        const deletedItem = await container.deleteById(req.params.id)
-        res.json({
-            mensaje: deletedItem
-        })
+        const deletedItem = await productDao.deleteById(req.params.id)
+        res.json({ deletedItem })
     } catch (err) {
-        res.json({
-            error: err
-        })
+        res.json({ error: err })
     }
 }
