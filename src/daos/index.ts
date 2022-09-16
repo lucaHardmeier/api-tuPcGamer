@@ -12,9 +12,16 @@ switch (dao) {
             const { default: CartDaoFirebase } = await import("./cart/cartDaoFirebase")
             cartDao = new CartDaoFirebase()
         }
-        runFirebase();
+        runFirebase()
         break;
     case 'fs':
+        const runFs = async () => {
+            const { default: ProductsDaoFs } = await import("./products/productDaoFs")
+            productDao = new ProductsDaoFs()
+            const { default: CartDaoFs } = await import("./cart/cartDaoFs")
+            cartDao = new CartDaoFs()
+        }
+        runFs()
         break;
     default:
     case 'mongodb':
@@ -25,7 +32,7 @@ switch (dao) {
             const { default: CartDaoMongoDb } = await import("./cart/cartDaoMongoDb")
             cartDao = new CartDaoMongoDb()
         }
-        RunMongoDb();
+        RunMongoDb()
         break;
 
 }

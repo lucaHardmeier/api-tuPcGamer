@@ -34,9 +34,16 @@ class ProductDaoFs extends FsContainer {
     }
 
     async edit(id: string, product: Product) {
+
         try {
-            const editedProduct = {}
-            return editedProduct
+            const productos = await this.getAll()
+            const index = productos.findIndex((prod: Product) => prod.id == id)
+            if (index === -1) throw new Error('producto no encontrado')
+            else {
+                await this.deleteById(id)
+                await this.save(product, id)
+                return product
+            }
         } catch (err) {
             console.log(err)
             return null
