@@ -1,8 +1,8 @@
 import express from 'express'
-import { addProductToACart, deleteCart, removeProductFromACart, showProducts } from '../controllers/carts.controllers'
+import { addProductToACart, createCart, deleteCart, removeProductFromACart, showProducts } from '../controllers/carts.controllers'
 const routes = express.Router()
 
-routes.post('/',)
+routes.post('/', createCart)
 
 routes.delete('/:id', deleteCart)
 

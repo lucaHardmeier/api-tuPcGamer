@@ -6,7 +6,7 @@ type Id = mongoose.Types.ObjectId
 
 class CartDaoMongoDb extends MongoDbContainer {
     constructor() {
-        super('carts', {
+        super('Cart', {
             products: {
                 type: [Object],
                 default: []
@@ -15,8 +15,9 @@ class CartDaoMongoDb extends MongoDbContainer {
     }
 
     async save() {
+        const cart = new this.collection()
         try {
-            const newCart = this.collection.save()
+            const newCart = cart.save()
             return newCart
         } catch (err) {
             console.log(err)
@@ -26,18 +27,18 @@ class CartDaoMongoDb extends MongoDbContainer {
 
     async addProduct(id: Id, id_item: Id) {
         try {
-            const product = productDao.getById(id_item)
+            const product = await productDao.getById(id_item)
             const cart = this.collection.findByIdAndUpdate(id, { $push: { products: product } })
             return cart
         } catch (err) {
-            console.log(err)
             return null
         }
     }
 
     async removeProduct(id: Id, id_item: Id) {
         try {
-            const cart = this.collection.findByIdAndUpdate(id, { $pull: { products: { _id: id_item } } })
+            // el pull no funciona
+            const cart = await this.collection.findByIdAndUpdate(id, { $pull: { products: { _id: id_item } } })
             return cart
         } catch (err) {
             console.log(err)

@@ -18,7 +18,9 @@ class CartDaoFirebase extends FirebaseContainer {
     async addProduct(id: Id, id_item: Id) {
         try {
             const product = db.collection('products').doc(id_item)
+            console.log(product)
             const doc = this.collection.doc(id)
+            console.log(doc)
             const cart = await doc.update({ products: FieldValue.arrayUnion(product) })
             return cart
         } catch (err) {

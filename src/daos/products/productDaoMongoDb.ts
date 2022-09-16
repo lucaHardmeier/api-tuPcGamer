@@ -8,7 +8,7 @@ type Product = {
 
 class ProductDaoMongoDb extends MongoDbContainer {
     constructor() {
-        super('products', {
+        super('Product', {
             title: {
                 type: String,
                 require: true
@@ -25,9 +25,10 @@ class ProductDaoMongoDb extends MongoDbContainer {
     }
 
     async save(product: Product) {
+        const newProduct = new this.collection(product)
         try {
-            const newProduct = this.collection.save(product)
-            return newProduct
+            const newProductSaved = await newProduct.save(product)
+            return newProductSaved
         } catch (err) {
             console.log(err)
             return null

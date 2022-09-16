@@ -11,11 +11,24 @@ class FirebaseContainer {
     async getAll() {
         try {
             const docs = (await this.collection.get()).docs
-            console.log(docs)
-            return docs
+            const response = docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }))
+            return response
         } catch (err) {
             console.log(err)
             return []
+        }
+    }
+
+    async getById(id: string) {
+        try {
+            const doc = this.collection.doc(id)
+            const product = await doc.get()
+            return product.data()
+        } catch (err) {
+            console.log(err)
         }
     }
 
@@ -27,16 +40,6 @@ class FirebaseContainer {
             return products
         } catch (err) {
             console.log("No se encontró el archivo", err)
-        }
-    }
-
-    async getById(id: string) {
-        try {
-            const doc = this.collection.doc(id)
-            const product = await doc.get()
-            return product.data()
-        } catch (err) {
-            console.log(err)
         }
     }
 

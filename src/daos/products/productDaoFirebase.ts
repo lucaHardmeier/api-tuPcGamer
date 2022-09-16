@@ -15,6 +15,7 @@ class CartDaoFirebase extends FirebaseContainer {
         try {
             const doc = this.collection.doc()
             const newProduct = doc.create(product)
+            console.log(newProduct.id)
             return newProduct
         } catch (err) {
             console.log(err)
