@@ -14,6 +14,16 @@ class CartDaoMongoDb extends MongoDbContainer {
         })
     }
 
+    async save() {
+        try {
+            const newCart = this.collection.save()
+            return newCart
+        } catch (err) {
+            console.log(err)
+            return null
+        }
+    }
+
     async addProduct(id: Id, id_item: Id) {
         try {
             const product = Product.findById(id_item)

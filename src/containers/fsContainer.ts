@@ -6,9 +6,9 @@ type Item = {
     products?: object
 }
 
-class Contenedor {
+class FsContainer {
 
-    private fileRoute: string
+    public fileRoute: string
 
     constructor(fileRoute: string) {
         this.fileRoute = fileRoute
@@ -29,26 +29,6 @@ class Contenedor {
             console.log('Archivo vaciado')
         } catch (err) {
             console.log("No se encontró el archivo", err)
-        }
-    }
-
-    async save(item: Item | null = null, itemId: string | null = null) {
-        const items = await this.getAll()
-        const id = itemId !== null ? itemId : items.length === 0 ? 1 : items[items.length - 1].id + 1
-        const timestamp = Date.now()
-        const content = item ? item : { products: [] }
-        items.push({
-            ...content,
-            id,
-            timestamp
-        })
-
-        try {
-            await fs.writeFile(this.fileRoute, JSON.stringify(items.sort((a: Item, b: Item) => +a.id - +b.id)))
-            return id
-        } catch (err) {
-            console.log('No se pudo guardar el objeto', err)
-            return null
         }
     }
 
@@ -73,4 +53,4 @@ class Contenedor {
     }
 }
 
-export default Contenedor
+export default FsContainer

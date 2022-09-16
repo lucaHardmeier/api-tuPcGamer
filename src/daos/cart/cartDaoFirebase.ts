@@ -9,6 +9,12 @@ class CartDaoFirebase extends FirebaseContainer {
         super('carts')
     }
 
+    async save() {
+        const doc = this.collection.doc()
+        const newCart = doc.create({ products: [] })
+        return newCart
+    }
+
     async addProduct(id: Id, id_item: Id) {
         try {
             const product = db.collection('products').doc(id_item)
