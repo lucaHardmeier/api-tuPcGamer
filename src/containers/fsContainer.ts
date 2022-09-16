@@ -1,11 +1,5 @@
 import fs from 'fs/promises'
 
-type Item = {
-    readonly id: string,
-    readonly timestamp: string
-    products?: object
-}
-
 class FsContainer {
 
     public fileRoute: string

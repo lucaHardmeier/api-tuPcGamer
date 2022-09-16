@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
+import { productDao } from ".."
 import MongoDbContainer from "../../containers/mongoDbContainer"
-import { Product } from "../../models/product"
 
 type Id = mongoose.Types.ObjectId
 
@@ -26,7 +26,7 @@ class CartDaoMongoDb extends MongoDbContainer {
 
     async addProduct(id: Id, id_item: Id) {
         try {
-            const product = Product.findById(id_item)
+            const product = productDao.getById(id_item)
             const cart = this.collection.findByIdAndUpdate(id, { $push: { products: product } })
             return cart
         } catch (err) {

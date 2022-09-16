@@ -1,0 +1,1 @@
+"use strict";exports.id=603,exports.ids=[603],exports.modules={603:(o,t,c)=>{c.r(t);var n=c(185),e=c.n(n);!async function(){try{await e().connect("mongodb://localhost:27017/tu-pc-gamer"),console.log("Connected to MongoDb")}catch(o){console.log(o)}}()}};

@@ -22,5 +22,8 @@ module.exports = {
                 exclude: /node_modules/
             }
         ]
+    },
+    experiments: {
+        topLevelAwait: true
     }
 }
